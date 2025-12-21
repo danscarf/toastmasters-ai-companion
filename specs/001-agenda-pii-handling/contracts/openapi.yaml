@@ -1,0 +1,77 @@
+openapi: 3.0.0
+info:
+  title: "RoleCopilot Agenda Processing API"
+  description: "API for processing meeting agenda PDFs to extract roles without storing PII."
+  version: "1.0.0"
+
+paths:
+  /api/process-agenda:
+    post:
+      summary: "Upload and process an agenda PDF"
+      description: |
+        Accepts a PDF file of a meeting agenda, parses it on the server to extract roles and assignees,
+        and returns the data. All extracted PII (assignee names) is held in memory only for the
+        duration of the request and is not stored persistently.
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: "The meeting agenda PDF file to process."
+      responses:
+        "200":
+          description: "Successful processing of the agenda."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AssignedRole"
+        "400":
+          description: "Bad Request - No file uploaded, or the file is not a PDF."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal Server Error - Failed to parse the PDF."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    AssignedRole:
+      type: object
+      properties:
+        id:
+          type: string
+          description: "A unique identifier for the role, generated on the server."
+          example: "a1b2c3d4"
+        role:
+          type: string
+          description: "The title of the meeting role."
+          example: "Toastmaster"
+        assignee:
+          type: string
+          nullable: true
+          description: "The name of the member assigned to the role."
+          example: "Jane Doe"
+      required:
+        - id
+        - role
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: "A human-readable error message."
+      required:
+        - message
