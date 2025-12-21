@@ -50,6 +50,17 @@ As a system administrator, I want to ensure that when the application processes 
 - **FR-008**: When encountering both a partial name (e.g., "Dan S.") and a full name (e.g., "Dan Scarf") for the same role, the system MUST prioritize and use the full name.
 - **FR-009**: If an external LLM API call fails, the system MUST gracefully inform the user about the failure and provide an option to proceed with manual entry of roles.
 
+### Security Requirements
+
+-   **FR-010: LLM Endpoint Authentication**: All requests to the LLM endpoint MUST be authenticated to ensure that only authorized components of the system can access it.
+-   **FR-011: Rate Limiting and Cost Control**: The system MUST implement rate limiting and other cost-control measures on the LLM endpoint to prevent financial abuse and ensure availability.
+-   **FR-012: Input Validation and Sanitization**: All data sent to the LLM endpoint, including the content of parsed PDFs and manual user inputs, MUST be strictly validated and sanitized to prevent prompt injection, jailbreaking attempts, and other malicious inputs.
+-   **FR-013: Secure by Default**: The system's design and configuration MUST follow the principle of least privilege.
+-   **FR-014: Dependency Management**: All third-party libraries and dependencies MUST be from trusted sources and be actively monitored for vulnerabilities.
+-   **FR-015: Secure Error Handling**: Error messages returned to the user or logged by the system MUST NOT expose sensitive information about the system's internal workings or data.
+-   **FR-016: Security Standards Review**: As part of the technical planning for this feature, a review of relevant security standards, such as the [NIST AI Risk Management Framework (AI RMF 1.0)](https://www.nist.gov/itl/ai-risk-management-framework) and the [OWASP Top 10 for Large Language Model Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/), MUST be conducted. The implementation plan MUST document which best practices are adopted and provide justification for any that are not.
+-   **FR-017: Threat Modeling**: A threat model for the 'Agenda PII Handling' feature MUST be created during the planning phase to identify and mitigate potential security risks.
+
 ### Key Entities *(include if feature involves data)*
 
 - **Meeting Role**: Represents a role in the meeting (e.g., Toastmaster, Speaker, Evaluator).

@@ -8,7 +8,7 @@
 ## 1. Executive Summary
 **Problem:** The administrative burden of Toastmasters meeting roles (Timer, Ah-Counter, Grammarian) creates high friction for members. Physical note-taking and manual calculation distract users from the primary goal of the meeting: active listening and public speaking practice.
 
-**Solution:** A mobile-first web application that acts as a "Heads-Up Display" (HUD). It minimizes cognitive load through large-touch interfaces, haptic feedback, and automated report generation, allowing the user to maintain eye contact with the speaker.
+**Solution:** A web application that acts as a "Heads-Up Display" (HUD). It minimizes cognitive load through large-touch interfaces, haptic feedback, and automated report generation, allowing the user to maintain eye contact with the speaker.
 
 **Success Metrics:**
 * Reduction in time spent compiling end-of-meeting reports (Target: <10 seconds).
@@ -68,15 +68,23 @@
 
 ## 4. Technical Constraints & Architecture
 
-### 4.1 Frontend Architecture
-* **Framework:** React / React Native (Expo recommended).
+### 4.1 Web Architecture
+* **Framework:** Next.js (App Router) with Tailwind CSS.
 * **State Management:** Local state management for session persistence (prevent data loss on screen rotation or accidental refresh).
-* **Storage:** `AsyncStorage` or `localStorage` for temporary session data.
+* **Storage:** `localStorage` for temporary session data.
+* **PDF Processing:** Browser-side parsing using a library like PDF.js.
 
-### 4.2 Non-Functional Requirements
+### 4.2 Backend
+* **Service Layer:** Next.js Route Handlers (API routes) will be used as the primary service layer. This keeps the application self-contained but allows for future expansion to an external backend if needed.
+
+### 4.3 Deployment
+* **Target:** The application should be "Vercel-ready" and also support standalone builds using Docker for flexible hosting options.
+
+### 4.4 Non-Functional Requirements
 * **Performance:** App Time-to-Interactive (TTI) must be under 1.5 seconds.
-* **Responsiveness:** Layout must adapt to standard mobile viewports (375px width min).
-* **Privacy:** No PII (Personally Identifiable Information) or audio recordings shall be sent to any external server. All processing is client-side.
+* **Responsiveness:** Layout must adapt to standard desktop and mobile viewports (375px width min).
+* **Privacy:** No PII (Personally Identifiable Information) or audio recordings shall be sent to any external server. All processing is client-side. The strict PII handling requirements outlined in the 'Agenda PII Handling' feature spec MUST be followed.
+* **Security:** The application must be designed to protect against common web vulnerabilities, and all interactions with external services (like LLMs) must be secured to prevent abuse and financial exploitation.
 
 ## 5. Future Scope (Post-MVP)
 * **v1.1:** Export reports to PDF/Email.
