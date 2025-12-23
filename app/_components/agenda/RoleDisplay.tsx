@@ -9,7 +9,7 @@ export function RoleDisplay() {
 
   if (loading) {
     return (
-      <div className="p-4 text-center text-gray-600">
+      <div className="p-4 text-center text-gray-600 dark:text-gray-400">
         Loading roles...
       </div>
     );
@@ -21,7 +21,7 @@ export function RoleDisplay() {
         Error: {error}
         <button
           onClick={clearAgenda}
-          className="ml-4 px-3 py-1 border border-red-600 text-red-600 rounded-md hover:bg-red-50"
+          className="ml-4 px-3 py-1 border border-red-600 text-red-600 rounded-md hover:bg-red-50 dark:hover:bg-red-900"
         >
           Clear Error
         </button>
@@ -31,20 +31,20 @@ export function RoleDisplay() {
 
   if (!agendaData || agendaData.length === 0) {
     return (
-      <div className="p-4 text-center text-gray-500">
+      <div className="p-4 text-center text-gray-500 dark:text-gray-400">
         Paste agenda text and click "Process Agenda" to see roles.
       </div>
     );
   }
 
   return (
-    <div className="p-4 bg-white shadow rounded-lg">
-      <h2 className="text-xl font-semibold mb-4">Extracted Roles:</h2>
-      <ul className="divide-y divide-gray-200">
+    <div className="p-4 bg-white dark:bg-gray-800 shadow rounded-lg">
+      <h2 className="text-xl font-semibold mb-4 text-black dark:text-white">Extracted Roles:</h2>
+      <ul className="divide-y divide-gray-200 dark:divide-gray-700">
         {agendaData.map((item) => (
           <li key={item.id} className="py-2 flex justify-between items-center">
-            <span className="font-medium text-gray-900">{item.role}:</span>
-            <span className={"text-gray-700"}>{item.assignee || <>Unassigned</>}</span>
+            <span className="font-medium text-gray-900 dark:text-gray-100">{item.role}:</span>
+            <span className={"text-gray-700 dark:text-gray-300"}>{item.assignee || <>Unassigned</>}</span>
           </li>
         ))}
       </ul>

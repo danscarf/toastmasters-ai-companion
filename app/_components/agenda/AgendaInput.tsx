@@ -16,15 +16,15 @@ export function AgendaInput() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 bg-white shadow rounded-lg space-y-4">
+    <form onSubmit={handleSubmit} className="p-4 bg-white dark:bg-gray-800 shadow rounded-lg space-y-4">
       <div>
-        <label htmlFor="agenda-text" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="agenda-text" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
           Paste your meeting agenda text or HTML here:
         </label>
         <textarea
           id="agenda-text"
           rows={10}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
           placeholder="e.g., Toastmaster: John Doe, Speaker: Jane Smith, ... "
@@ -32,13 +32,13 @@ export function AgendaInput() {
         ></textarea>
       </div>
       <div>
-        <label htmlFor="attendee-names" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="attendee-names" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
           Attendee Names (comma-separated, optional, for better PII handling):
         </label>
         <input
           type="text"
           id="attendee-names"
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
+          className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-black dark:text-white shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm p-2 border"
           value={attendeeNames}
           onChange={(e) => setAttendeeNames(e.target.value)}
           placeholder="e.g., John Doe, Jane Smith"
