@@ -1,0 +1,83 @@
+openapi: 3.0.0
+info:
+  title: "RoleCopilot Agenda Processing API"
+  description: "API for processing unstructured agenda text to extract roles without storing PII."
+  version: "1.1.0"
+
+paths:
+  /api/process-agenda:
+    post:
+      summary: "Process pasted agenda text"
+      description: |
+        Accepts a block of unstructured text/HTML, sanitizes it locally to remove PII,
+        sends the sanitized text to the Gemini AI for structuring, re-inserts the PII,
+        and returns the final structured JSON data.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                text:
+                  type: string
+                  description: "The unstructured text or HTML of the meeting agenda."
+                  example: "Toastmaster: Jane Doe, Speaker: John Smith"
+                attendees:
+                  type: array
+                  items:
+                    type: string
+                  description: "A list of attendee names to help identify and sanitize PII."
+                  example: ["Jane Doe", "John Smith"]
+      responses:
+        "200":
+          description: "Successful processing of the agenda."
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/AssignedRole"
+        "400":
+          description: "Bad Request - No text provided."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: "Internal Server Error - Failed to process the text with the AI service."
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    AssignedRole:
+      type: object
+      properties:
+        id:
+          type: string
+          description: "A unique identifier for the role, generated on the server."
+          example: "a1b2c3d4"
+        role:
+          type: string
+          description: "The title of the meeting role."
+          example: "Toastmaster"
+        assignee:
+          type: string
+          nullable: true
+          description: "The name of the member assigned to the role."
+          example: "Jane Doe"
+      required:
+        - id
+        - role
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: "A human-readable error message."
+      required:
+        - message
