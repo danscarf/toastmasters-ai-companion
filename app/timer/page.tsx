@@ -51,7 +51,7 @@ function TimerPageContent() {
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">📜</span>
                   <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                    Timer's Script
+                    Timer&apos;s Script
                   </h2>
                 </div>
                 <div className="flex items-center gap-2">
@@ -136,7 +136,7 @@ function TimerPageContent() {
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-2xl">📋</span>
                 <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                  Timer's Report
+                  Timer&apos;s Report
                 </h2>
               </div>
               <TimerReport />
