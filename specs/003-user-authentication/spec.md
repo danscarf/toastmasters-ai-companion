@@ -53,7 +53,14 @@ As a RoleCopilot user, I want to securely log in to the application, so that I c
 -   **SC-001**: 100% of login attempts with valid credentials are successful within 2 seconds.
 -   **SC-002**: Less than 1% of users report issues with session persistence over a 24-hour period.
 
+## Technology Choices
+
+-   **Authentication**: Supabase Auth
+-   **Database**: Supabase PostgreSQL
+-   **ORM**: TypeORM
+-   **Backend Functions**: Supabase Edge Functions
+
 ## Assumptions
 
--   Authentication will be handled via a third-party service like Firebase Authentication or Supabase Auth to minimize custom security implementation.
+-   Authentication and backend logic will be handled via Supabase to minimize custom security implementation and manage secrets effectively.
 -   Email verification will be part of the registration process.

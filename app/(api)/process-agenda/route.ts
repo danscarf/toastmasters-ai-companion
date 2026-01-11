@@ -1,7 +1,7 @@
 // app/(api)/process-agenda/route.ts
 import { NextResponse } from 'next/server';
 import { sanitizeTextWithPII, rehydrateAssignedRoles } from '../../../app/_lib/pii';
-import { getStructuredRolesFromGemini } from '../../../app/_lib/gemini';
+import { supabase } from '../../_lib/supabase'; // Import the client-side supabase instance
 
 export async function POST(request: Request) {
   try {
@@ -14,13 +14,20 @@ export async function POST(request: Request) {
     // 1. Sanitize PII
     const { sanitizedText, piiMap } = sanitizeTextWithPII(text, attendees || []);
 
-    // 2. Call Gemini API with sanitized text
+    // 2. Call Supabase Edge Function with sanitized text
     let structuredRoles;
     try {
-      structuredRoles = await getStructuredRolesFromGemini(sanitizedText);
+      const { data, error: edgeFunctionError } = await supabase.functions.invoke('gemini-proxy', {
+        body: { sanitizedText },
+      });
+
+      if (edgeFunctionError) {
+        throw new Error(edgeFunctionError.message);
+      }
+      structuredRoles = data; // Assuming the Edge Function returns structured roles directly
+
     } catch (aiError: unknown) {
-      // Gracefully inform user and revert to manual if AI call fails (FR-009)
-      console.error("Gemini API call failed:", aiError);
+      console.error("Supabase Edge Function call failed:", aiError);
       return NextResponse.json(
         { message: `AI processing failed. Please try manual entry. Error: ${(aiError as Error).message || 'Unknown AI error.'}` },
         { status: 500 }
