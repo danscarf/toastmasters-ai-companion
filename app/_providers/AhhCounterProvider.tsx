@@ -22,7 +22,9 @@ export interface AhhCounterSession {
 
 interface AhhCounterContextType {
   session: AhhCounterSession;
+  selectedSpeaker: Speaker | null;
   addSpeaker: (name: string) => void;
+  selectSpeaker: (speaker: Speaker | null) => void;
   logFillerWord: (speaker: Speaker, fillerWord: string) => void;
   undoLastLog: () => void;
 }
@@ -35,6 +37,7 @@ export const AhhCounterProvider = ({ children }: { children: ReactNode }) => {
     speakers: [],
     logEntries: [],
   });
+  const [selectedSpeaker, setSelectedSpeaker] = useState<Speaker | null>(null);
 
   const addSpeaker = (name: string) => {
     const newSpeaker: Speaker = {
@@ -45,6 +48,10 @@ export const AhhCounterProvider = ({ children }: { children: ReactNode }) => {
       ...prevSession,
       speakers: [...prevSession.speakers, newSpeaker],
     }));
+  };
+
+  const selectSpeaker = (speaker: Speaker | null) => {
+    setSelectedSpeaker(speaker);
   };
 
   const logFillerWord = (speaker: Speaker, fillerWord: string) => {
@@ -69,7 +76,9 @@ export const AhhCounterProvider = ({ children }: { children: ReactNode }) => {
 
   const value = {
     session,
+    selectedSpeaker,
     addSpeaker,
+    selectSpeaker,
     logFillerWord,
     undoLastLog,
   };

@@ -12,12 +12,12 @@ This document breaks down the implementation of the "Ahh Counter" feature into a
 **Independent Test**: User can add a speaker, select them, and tap a filler word button to create a log entry.
 
 - [X] T004 [US1] Create the `SpeakerList` component in `app/_components/ahh-counter/SpeakerList.tsx` to allow adding and selecting speakers.
-- [ ] T004.1 [US1] Implement "Add Speaker" UI in `SpeakerList.tsx` (input field and button).
-- [ ] T004.2 [US1] Connect "Add Speaker" to `addSpeaker` in `AhhCounterProvider` in `SpeakerList.tsx`.
-- [ ] T004.3 [US1] Implement speaker selection UI in `SpeakerList.tsx`.
+- [X] T004.1 [US1] Implement "Add Speaker" UI in `SpeakerList.tsx` (input field and button).
+- [X] T004.2 [US1] Connect "Add Speaker" to `addSpeaker` in `AhhCounterProvider` in `SpeakerList.tsx`.
+- [X] T004.3 [US1] Implement speaker selection UI in `SpeakerList.tsx`.
 - [X] T005 [US1] Create the `AhhCounterControls` component in `app/_components/ahh-counter/AhhCounterControls.tsx` with buttons for each filler word.
-- [ ] T005.1 [US1] Connect filler word buttons in `AhhCounterControls.tsx` to `logFillerWord` in `AhhCounterProvider`.
-- [ ] T005.2 [US1] Implement an "undo" button in `AhhCounterControls.tsx` to call `undoLastLog` in `AhhCounterProvider`.
+- [X] T005.1 [US1] Connect filler word buttons in `AhhCounterControls.tsx` to `logFillerWord` in `AhhCounterProvider`.
+- [X] T005.2 [US1] Implement an "undo" button in `AhhCounterControls.tsx` to call `undoLastLog` in `AhhCounterProvider`.
 - [X] T006 [US1] Integrate the `AhhCounterProvider`, `SpeakerList`, and `AhhCounterControls` into the main `app/ahh-counter/page.tsx`.
 
 ## Phase 3: User Story 2 - View Summary Report
