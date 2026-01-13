@@ -30,7 +30,7 @@ function TimerPageContent() {
             </h1>
           </div>
           <p className="text-xl text-gray-600 dark:text-gray-400">
-            Professional meeting timer with color cards and automatic logging
+            Your digital timing assistant for Toastmasters meetings
           </p>
         </div>
 
