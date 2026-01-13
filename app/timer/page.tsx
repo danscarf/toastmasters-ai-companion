@@ -1,7 +1,9 @@
 // app/timer/page.tsx
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '../_providers/SupabaseAuthProvider';
 import { TimerProvider, useTimer } from '../_providers/TimerProvider';
 import { TimerDisplay } from '../_components/timer/TimerDisplay';
 import { TimerControls } from '../_components/timer/TimerControls';
@@ -51,7 +53,7 @@ function TimerPageContent() {
                 <div className="flex items-center gap-3">
                   <span className="text-2xl">📜</span>
                   <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                    Timer's Script
+                    Timer&apos;s Script
                   </h2>
                 </div>
                 <div className="flex items-center gap-2">
@@ -136,7 +138,7 @@ function TimerPageContent() {
               <div className="flex items-center gap-3 mb-4">
                 <span className="text-2xl">📋</span>
                 <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100">
-                  Timer's Report
+                  Timer&apos;s Report
                 </h2>
               </div>
               <TimerReport />
@@ -149,6 +151,32 @@ function TimerPageContent() {
 }
 
 export default function TimerPage() {
+  const router = useRouter();
+  const { session, isLoading } = useAuth();
+
+  useEffect(() => {
+    if (!isLoading && !session) {
+      console.log('Not authenticated, redirecting to login...');
+      router.push('/auth/login?redirectedFrom=/timer');
+    }
+  }, [session, isLoading, router]);
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-xl">Loading...</div>
+      </div>
+    );
+  }
+
+  if (!session) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-xl">Redirecting to login...</div>
+      </div>
+    );
+  }
+
   return (
     <TimerProvider>
       <TimerPageContent />

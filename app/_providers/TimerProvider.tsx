@@ -1,5 +1,9 @@
 import React, { createContext, useContext, useState, useRef, useEffect, useCallback, ReactNode } from 'react';
 import { logEvent } from '../_lib/analytics';
+import { useAuth } from './SupabaseAuthProvider'; // Import useAuth
+// TypeORM imports removed - database operations should be done via API routes, not client-side
+// import { initializeDataSource, getTimerSessionRepository } from '../_lib/typeorm';
+// import { TimerSession } from '../_lib/entities/TimerSession';
 
 // Define the shape of a Timer Preset
 export interface TimerPreset {
@@ -11,8 +15,8 @@ export interface TimerPreset {
   gracePeriod: { under: number; over: number }; // seconds
 }
 
-// Define the shape of a Logged Timer Session
-export interface TimerSession {
+// Define the shape of a Logged Timer Session (Frontend representation for state)
+export interface LoggedTimerSession { // Renamed from TimerSession
   id: string;
   speakerName: string | null;
   presetName: string;
@@ -20,6 +24,7 @@ export interface TimerSession {
   duration: number; // seconds
   isWithinTime: boolean | null; // null until evaluated
   timestamp: Date;
+  userId?: string; // Optional for frontend, will be set on save
 }
 
 // Define the shape of the Timer Context
@@ -28,7 +33,7 @@ interface TimerContextType {
   elapsedTime: number; // seconds
   colorSignal: 'none' | 'green' | 'yellow' | 'red';
   selectedPreset: TimerPreset | null;
-  loggedTimes: TimerSession[];
+  loggedTimes: LoggedTimerSession[]; // Use LoggedTimerSession
   startTimer: () => void;
   stopTimer: () => void;
   resetTimer: () => void;
@@ -45,9 +50,15 @@ export const TimerProvider = ({ children }: { children: ReactNode }) => {
   const [elapsedTime, setElapsedTime] = useState<number>(0);
   const [colorSignal, setColorSignal] = useState<'none' | 'green' | 'yellow' | 'red'>('none');
   const [selectedPreset, setSelectedPreset] = useState<TimerPreset | null>(null);
-  const [loggedTimes, setLoggedTimes] = useState<TimerSession[]>([]);
+  const [loggedTimes, setLoggedTimes] = useState<LoggedTimerSession[]>([]); // Use LoggedTimerSession
 
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const { user } = useAuth(); // Get authenticated user
+
+  // TypeORM initialization removed - will be handled by API routes
+  // useEffect(() => {
+  //   initializeDataSource().catch(console.error);
+  // }, []);
 
   // Define functions using useCallback
   const stopTimer = useCallback(() => setIsRunning(false), []);
@@ -76,22 +87,43 @@ export const TimerProvider = ({ children }: { children: ReactNode }) => {
     setSelectedPreset(preset);
   }, []);
 
-  const logTime = useCallback((speakerName: string | null) => {
-    if (selectedPreset) {
+  const logTime = useCallback(async (speakerName: string | null) => {
+    if (selectedPreset && user?.id) { // Ensure user is logged in
       const isWithinTime = calculateIsWithinTime(elapsedTime, selectedPreset);
-      const newSession: TimerSession = {
+      
+      // Create a new session object (local state only for now)
+      // TODO: Add API route to save to database
+      const newSession: LoggedTimerSession = {
         id: crypto.randomUUID(),
-        speakerName,
+        speakerName: speakerName,
         presetName: selectedPreset.name,
         timeRequirement: formatTimeRequirement(selectedPreset),
         duration: elapsedTime,
-        isWithinTime,
+        isWithinTime: isWithinTime,
         timestamp: new Date(),
+        userId: user.id,
       };
+
+      // Save to local state
       setLoggedTimes(prev => [...prev, newSession]);
-      resetTimer();
+
+      // TODO: Optionally call an API route to persist to database
+      // try {
+      //   await fetch('/api/timer-sessions', {
+      //     method: 'POST',
+      //     headers: { 'Content-Type': 'application/json' },
+      //     body: JSON.stringify(newSession),
+      //   });
+      // } catch (error) {
+      //   console.error('Failed to save to database:', error);
+      // }
+      
+      resetTimer(); // Reset after logging
+    } else if (!user?.id) {
+      console.warn("Cannot log time: User not authenticated.");
+      // Optionally, show a message to the user
     }
-  }, [selectedPreset, elapsedTime, calculateIsWithinTime, formatTimeRequirement, resetTimer]);
+  }, [selectedPreset, elapsedTime, calculateIsWithinTime, formatTimeRequirement, resetTimer, user]);
 
   // Timer logic
   useEffect(() => {
