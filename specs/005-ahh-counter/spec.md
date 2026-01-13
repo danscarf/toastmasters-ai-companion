@@ -7,23 +7,37 @@
 
 ## User Scenarios & Testing *(mandatory)*
 
-### User Story 1 - Track Filler Words (Priority: P1)
+### User Story 1 - Log a Filler Word Event (Priority: P1)
 
-As the Ah-Counter, I want to be able to track filler words for each speaker during a meeting so that I can provide an accurate report.
+As the Ah-Counter, when a speaker uses a filler word, I want to tap a button to create a timestamped log entry for that specific word and speaker.
 
-**Why this priority**: This is the core functionality of the Ahh Counter role. Without this, the role cannot be performed.
+**Why this priority**: This is the fundamental data capture action. The entire feature depends on accurately logging individual events as they happen.
 
-**Independent Test**: Can be tested by adding speakers, incrementing their filler word counts, and verifying the final report is accurate.
+**Independent Test**: Can be tested by selecting a speaker, tapping a filler word button (e.g., "Um"), and verifying that a corresponding log entry is created.
 
 **Acceptance Scenarios**:
 
-1.  **Given** I am on the Ah-Counter screen, **When** I add a new speaker, **Then** the speaker appears in my list with all filler counts at zero.
-2.  **Given** a speaker is in my list, **When** the speaker uses a filler word (e.g., "ah"), **Then** I can tap the "ah" button for that speaker and their "ah" count increases by one.
-3.  **Given** I have tracked filler words for multiple speakers, **When** the meeting ends, **Then** I can view a summary report showing each speaker and their total counts for each filler word.
+1.  **Given** I have selected a speaker, **When** I tap the "Um" button, **Then** a new log entry is created with the speaker's name, the filler word "Um", and the current timestamp.
+2.  **Given** a log entry has been created, **When** I view the raw log, **Then** I see the new entry in a list of events.
 
 ---
 
-### User Story 2 - View Role Script (Priority: P2)
+### User Story 2 - View Summary Report (Priority: P2)
+
+As the Ah-Counter, I want to view a summary report that automatically aggregates the individual log entries to show total counts for each filler word per speaker.
+
+**Why this priority**: This provides the final, aggregated data required for the Ah-Counter to deliver their report to the club.
+
+**Independent Test**: Can be tested by logging several filler word events for different speakers and then viewing the report to ensure the totals are calculated correctly.
+
+**Acceptance Scenarios**:
+
+1.  **Given** I have logged 3 "Ah" events and 2 "So" events for "John Doe", **When** I view the summary report, **Then** I see "John Doe" has a count of 3 for "Ah" and 2 for "So".
+2.  **Given** the log is empty, **When** I view the summary report, **Then** the report is empty or indicates no data has been logged.
+
+---
+
+### User Story 3 - View Role Script (Priority: P3)
 
 As the Ah-Counter, I want to easily access the official script for my role in a collapsible panel so I can introduce it correctly at the start of the meeting.
 
@@ -36,8 +50,6 @@ As the Ah-Counter, I want to easily access the official script for my role in a 
 1.  **Given** I am on the Ah-Counter page, **When** I click on the script panel header, **Then** the full text of the Ah-Counter introduction is revealed.
 2.  **Given** I am on the Ah-Counter page and the script panel is open, **When** I click on the script panel header again, **Then** the full text of the Ah-Counter introduction is hidden.
 
----
-
 ### Edge Cases
 
 - What happens if the user accidentally increments the wrong counter? Is there an undo or decrement option? Yes, a decrement button should be present next to each increment button.
@@ -49,22 +61,21 @@ As the Ah-Counter, I want to easily access the official script for my role in a 
 ### Functional Requirements
 
 - **FR-001**: The system MUST allow the user to add, name, and remove speakers for the session.
-- **FR-002**: The system MUST provide a dedicated interface for tracking filler word counts for each speaker.
-- **FR-003**: The tracking interface MUST include counters for "Ah", "Um", "Er", "Well", "So", "Like", "But", "Repeats", and a generic "Other".
-- **FR-004**: The user MUST be able to increment the count for each filler word category for each speaker with a single action (e.g., a tap).
-- **FR-005**: The system MUST display the running total for each filler word category for every speaker in real-time.
-- **FR-006**: The system MUST be able to generate a summary report displaying the final counts for all speakers.
+- **FR-002**: For each speaker, the system MUST provide an interface with buttons for each filler word category ("Ah", "Um", "Er", "Well", "So", "Like", "But", "Repeats", "Other").
+- **FR-003**: When a user taps a filler word button for a speaker, the system MUST create a timestamped `AhCounterLogEntry` in a session log.
+- **FR-004**: The system MUST allow a user to undo the creation of the most recent log entry to correct mistakes.
+- **FR-005**: The system MUST provide a summary report view that is automatically generated from the session log.
+- **FR-006**: The summary report MUST aggregate the log entries to display the total count of each filler word for each speaker.
 - **FR-007**: The system MUST display the official Ah-Counter introduction script within a collapsible panel.
-- **FR-008**: The user MUST be able to decrement the count for each filler word category for each speaker.
 
 ### Key Entities *(include if feature involves data)*
 
 -   **Speaker**: Represents a person speaking at the meeting.
     -   Attributes: `name` (string)
 -   **Session**: Represents a single meeting's tracking data.
-    -   Attributes: `date` (datetime), `speakers` (list of Speaker objects)
--   **FillerCount**: Represents the counts of filler words for a speaker within a session.
-    -   Attributes: `speaker` (link to Speaker), `ah_count` (integer), `um_count` (integer), `er_count` (integer), `well_count` (integer), `so_count` (integer), `like_count` (integer), `but_count` (integer), `repeats_count` (integer), `other_count` (integer)
+    -   Attributes: `date` (datetime), `speakers` (list of Speaker objects), `logEntries` (list of AhCounterLogEntry objects)
+-   **AhCounterLogEntry**: Represents a single instance of a filler word being used.
+    -   Attributes: `id` (string), `speaker` (link to Speaker), `fillerWord` (string), `timestamp` (datetime)
 
 
 ## Success Criteria *(mandatory)*
