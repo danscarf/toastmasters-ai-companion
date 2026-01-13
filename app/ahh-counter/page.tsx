@@ -5,6 +5,7 @@ import React from 'react';
 import { AhhCounterProvider } from '../_providers/AhhCounterProvider';
 import { SpeakerList } from '../_components/ahh-counter/SpeakerList';
 import { AhhCounterControls } from '../_components/ahh-counter/AhhCounterControls';
+import { AhhCounterReport } from '../_components/ahh-counter/AhhCounterReport';
 
 import { AhhCounterScript } from '../_components/ahh-counter/AhhCounterScript';
 
